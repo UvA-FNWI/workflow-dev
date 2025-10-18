@@ -1,0 +1,87 @@
+{
+  "name": "workflow-dev",
+  "displayName": "workflow-dev",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "categories": [
+    "Debuggers"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "workflow-dev.runEditorContents",
+          "when": "resourceLangId == yaml",
+          "group": "navigation@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "workflow-dev.runEditorContents",
+          "when": "resourceLangId == yaml"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "workflow-dev.runEditorContents",
+        "title": "Run workflow file",
+        "category": "Workflow development",
+        "enablement": "!inDebugMode",
+        "icon": "$(play)"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "workflow",
+        "languages": [
+          "yaml"
+        ],
+        "label": "Workflow debugger",
+        "program": "./out/debugAdapter.js",
+        "runtime": "node",
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "target"
+            ],
+            "properties": {
+              "target": {
+                "type": "string",
+                "description": "Absolute path to a text file.",
+                "default": "${workspaceFolder}/${command:AskForProgramName}"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.105.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.36.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@vscode/debugadapter": "^1.68.0"
+  }
+}
