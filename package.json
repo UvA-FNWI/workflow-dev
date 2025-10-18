@@ -43,7 +43,6 @@
           "yaml"
         ],
         "label": "Workflow debugger",
-        "program": "./out/debugAdapter.js",
         "runtime": "node",
         "configurationAttributes": {
           "launch": {
@@ -53,8 +52,7 @@
             "properties": {
               "target": {
                 "type": "string",
-                "description": "Absolute path to a text file.",
-                "default": "${workspaceFolder}/${command:AskForProgramName}"
+                "description": "Absolute path to the workflow."
               }
             }
           }
