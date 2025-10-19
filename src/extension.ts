@@ -19,8 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 				vscode.debug.startDebugging(undefined, {
 					type: 'workflow',
 					name: 'Run workflow file',
-					request: 'launch',
-					program: targetResource.fsPath
+					request: 'launch'
 				},
 					{ noDebug: true }
 				);
@@ -34,8 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 				{
 					name: "Launch workflow",
 					request: "launch",
-					type: "workflow",
-					program: "${file}"
+					type: "workflow"
 				}
 			];
 		}

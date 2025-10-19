@@ -47,12 +47,22 @@
         "configurationAttributes": {
           "launch": {
             "required": [
-              "target"
+              "target",
+              "version",
+              "api"
             ],
             "properties": {
               "target": {
                 "type": "string",
                 "description": "Absolute path to the workflow."
+              },
+              "version": {
+                "type": "string",
+                "description": "Version identifier used for testing."
+              },
+              "api": {
+                "type": "string",
+                "description": "Url of the workflow API to use."
               }
             }
           }

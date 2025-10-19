@@ -1,24 +1,23 @@
-import { InitializedEvent, LoggingDebugSession } from "@vscode/debugadapter";
+import { InitializedEvent, LoggingDebugSession, OutputEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import path from "path";
 import * as vscode from 'vscode';
 
 interface WorkflowLaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
-	/** An absolute path to the workflow. */
 	target: string;
+  version: string;
+  api: string;
 }
 
 export class WorkflowDebugSession extends LoggingDebugSession {
   public constructor() {
     super();
-    console.log('Create debug session');
   }
   
   protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
     this.sendResponse(response);
 
     this.sendEvent(new InitializedEvent());
-    console.log('Init debug session');
   }
 
   protected async launchRequest(launchResponse: DebugProtocol.LaunchResponse, args: WorkflowLaunchRequestArguments, request?: DebugProtocol.Request) {
@@ -49,7 +48,7 @@ export class WorkflowDebugSession extends LoggingDebugSession {
       }
     }
     
-    const response = await fetch('http://localhost:5025/Versions/bla', {
+    const response = await fetch(`${args.api}/Versions/${args.version}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -64,6 +63,7 @@ export class WorkflowDebugSession extends LoggingDebugSession {
         });
     } else {
       this.sendResponse(launchResponse);
+      this.sendEvent(new OutputEvent(`Running. View the workflow at https://workflow-dummy-ui.datanose.nl/instances?version=${args.version}`));
     }
   }
 }
