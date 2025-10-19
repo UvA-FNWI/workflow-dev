@@ -58,7 +58,17 @@
           }
         }
       }
-    ]
+    ],
+    "configurationDefaults": {
+      "yaml.schemas": {
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/EntityType.json": ["Entity.yaml", "Properties.yaml", "Actions.yaml"],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Form.json": ["**/Forms/*.yaml"],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Step.json": ["**/Steps/*.yaml"],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Role.json": ["**/Roles/*.yaml"],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Screen.json": ["**/Screens/*.yaml"],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/ValueSet.json": ["**/ValueSets/*.yaml"]
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -81,5 +91,6 @@
   },
   "dependencies": {
     "@vscode/debugadapter": "^1.68.0"
-  }
+  },
+  "extensionDependencies": ["redhat.vscode-yaml"]
 }
