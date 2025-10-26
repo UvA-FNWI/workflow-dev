@@ -4,7 +4,6 @@ import path from "path";
 import * as vscode from 'vscode';
 
 interface WorkflowLaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
-	target: string;
   version: string;
   api: string;
 }
