@@ -9,6 +9,8 @@ interface WorkflowLaunchRequestArguments extends DebugProtocol.LaunchRequestArgu
 }
 
 export class WorkflowDebugSession extends LoggingDebugSession {
+  private _configurationDone = false;
+
   public constructor() {
     super();
   }
@@ -19,7 +21,19 @@ export class WorkflowDebugSession extends LoggingDebugSession {
     this.sendEvent(new InitializedEvent());
   }
 
+  protected configurationDoneRequest(response: DebugProtocol.ConfigurationDoneResponse, args: DebugProtocol.ConfigurationDoneArguments): void {
+		super.configurationDoneRequest(response, args);
+
+    console.log('configuration done');
+		this._configurationDone = true;
+	}
+
+  protected async attachRequest(response: DebugProtocol.AttachResponse, args: WorkflowLaunchRequestArguments) {
+		console.log('attach request not implemented');
+	}
+
   protected async launchRequest(launchResponse: DebugProtocol.LaunchResponse, args: WorkflowLaunchRequestArguments, request?: DebugProtocol.Request) {
+    console.log("launching debug session");
     const fileMap: { [filename: string]: string } = {};
         
     // Find all files in the workspace
@@ -58,11 +72,11 @@ export class WorkflowDebugSession extends LoggingDebugSession {
     if (!response.ok) {
         this.sendErrorResponse(launchResponse, {
           id: response.status,
-          format: await response.text()
+          format: `Error connecting to backend (${response.status}): ${await response.text()}`
         });
     } else {
       this.sendResponse(launchResponse);
-      this.sendEvent(new OutputEvent(`Running. View the workflow at https://workflow-dummy-ui.datanose.nl/instances?version=${args.version}`));
+      this.sendEvent(new OutputEvent(`Running. View the workflow at https://workflow-dummy-ui.datanose.nl/instances?version=${args.version}&api=${args.api}`));
     }
   }
 }

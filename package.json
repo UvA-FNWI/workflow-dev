@@ -3,6 +3,11 @@
   "displayName": "workflow-dev",
   "description": "",
   "version": "0.0.1",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UvA-FNWI/workflow-dev.git"
+  },
   "engines": {
     "vscode": "^1.105.0"
   },
@@ -11,34 +16,11 @@
   ],
   "activationEvents": [
     "onDebugResolve:workflow",
-    "onDebugDynamicConfigurations:workflow"
+    "onDebugDynamicConfigurations:workflow",
+    "onLanguage:yaml"
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "menus": {
-      "editor/title/run": [
-        {
-          "command": "workflow-dev.runEditorContents",
-          "when": "resourceLangId == yaml",
-          "group": "navigation@1"
-        }
-      ],
-      "commandPalette": [
-        {
-          "command": "workflow-dev.runEditorContents",
-          "when": "resourceLangId == yaml"
-        }
-      ]
-    },
-    "commands": [
-      {
-        "command": "workflow-dev.runEditorContents",
-        "title": "Run workflow file",
-        "category": "Workflow development",
-        "enablement": "!inDebugMode",
-        "icon": "$(play)"
-      }
-    ],
     "debuggers": [
       {
         "type": "workflow",
@@ -64,32 +46,55 @@
               }
             }
           }
-        }
+        },
+        "initialConfigurations": [
+          {
+              "type": "workflow",
+              "request": "launch",
+              "name": "Launch workflow",
+              "api": "https://workflow-api-tst.datanose.nl/",
+              "version": "testing-1"
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Workflow: Launch",
+            "description": "A new configuration for launching a workflow.",
+            "body": {
+              "type": "workflow",
+              "request": "launch",
+              "name": "Launch workflow",
+              "api": "https://workflow-api-tst.datanose.nl/",
+              "version": "testing-1"
+            }
+          }
+        ]
       }
     ],
     "configurationDefaults": {
       "yaml.schemas": {
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/EntityType.json": ["Entity.yaml", "Properties.yaml", "Actions.yaml"],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Form.json": ["**/Forms/*.yaml"],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Step.json": ["**/Steps/*.yaml"],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Role.json": ["**/Roles/*.yaml"],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Screen.json": ["**/Screens/*.yaml"],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/ValueSet.json": ["**/ValueSets/*.yaml"]
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/EntityType.json": [
+          "Entity.yaml",
+          "Properties.yaml",
+          "Actions.yaml"
+        ],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Form.json": [
+          "**/Forms/*.yaml"
+        ],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Step.json": [
+          "**/Steps/*.yaml"
+        ],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Role.json": [
+          "**/Roles/*.yaml"
+        ],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Screen.json": [
+          "**/Screens/*.yaml"
+        ],
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/ValueSet.json": [
+          "**/ValueSets/*.yaml"
+        ]
       }
-    },
-    "configurationSnippets": [
-      {
-        "label": "Workflow: Launch",
-        "description": "A new configuration for launching a workflow.",
-        "body": {
-          "type": "workflow",
-          "request": "launch",
-          "name": "Launch workflow",
-          "api": "https://workflow-api-tst.datanose.nl/",
-          "version": "testing-1"
-        }
-      }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
