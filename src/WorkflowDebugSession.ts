@@ -54,7 +54,7 @@ export class WorkflowDebugSession extends LoggingDebugSession {
           ? path.relative(workspaceFolder.uri.fsPath, fileUri.fsPath)
           : fileUri.fsPath;
         
-        fileMap[relativePath] = textContent;
+        fileMap[relativePath.replaceAll("\\", "/")] = textContent;
       } catch (error) {
         console.error(`Error reading file ${fileUri.fsPath}:`, error);
         // Continue with other files even if one fails
