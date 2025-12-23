@@ -74,24 +74,24 @@
     ],
     "configurationDefaults": {
       "yaml.schemas": {
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/EntityType.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/EntityType.json": [
           "Entity.yaml",
           "Properties.yaml",
           "Actions.yaml"
         ],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Form.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Form.json": [
           "**/Forms/*.yaml"
         ],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Step.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Step.json": [
           "**/Steps/*.yaml"
         ],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Role.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Role.json": [
           "**/Roles/*.yaml"
         ],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/Screen.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/Screen.json": [
           "**/Screens/*.yaml"
         ],
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/feature/DN-3406-schemas/Schemas/ValueSet.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/ValueSet.json": [
           "**/ValueSets/*.yaml"
         ]
       }
