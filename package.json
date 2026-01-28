@@ -2,7 +2,7 @@
   "name": "workflow-dev",
   "displayName": "workflow-dev",
   "description": "",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "uva",
   "type": "module",
   "repository": {
@@ -74,7 +74,7 @@
     ],
     "configurationDefaults": {
       "yaml.schemas": {
-        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/EntityType.json": [
+        "https://raw.githubusercontent.com/UvA-FNWI/workflow-api/refs/heads/main/Schemas/WorkflowDefinition.json": [
           "Entity.yaml",
           "Properties.yaml",
           "Actions.yaml"
