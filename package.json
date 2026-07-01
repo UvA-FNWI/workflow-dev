@@ -18,10 +18,17 @@
   "activationEvents": [
     "onDebugResolve:workflow",
     "onDebugDynamicConfigurations:workflow",
-    "onLanguage:yaml"
+    "onLanguage:yaml",
+    "onAuthenticationRequest:workflow.surfconext"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "authentication": [
+      {
+        "id": "workflow.surfconext",
+        "label": "SURFconext"
+      }
+    ],
     "debuggers": [
       {
         "type": "workflow",
@@ -117,7 +124,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@vscode/debugadapter": "^1.68.0"
+    "@vscode/debugadapter": "^1.68.0",
+    "openid-client": "^6.8.2"
   },
   "extensionDependencies": [
     "redhat.vscode-yaml"
