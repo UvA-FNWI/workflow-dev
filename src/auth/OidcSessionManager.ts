@@ -24,7 +24,6 @@ export interface AccountDetails {
 
 export interface StoredCredentials {
   accessToken: string;
-  refreshToken?: string;
   idToken: string;
   expiresAt: number;
   account: AccountDetails;
@@ -78,17 +77,8 @@ export class OidcSessionManager {
       return this.toSession(stored);
     }
 
-    if (stored?.refreshToken) {
-      logger.info('Stored access token is near expiry; attempting refresh.');
-      const generation = this.loginGeneration;
-      try {
-        return this.toSession(await this.refresh(stored, generation));
-      } catch {
-        logger.warn('Stored SURFconext session could not be refreshed; removing it.');
-        await this.replaceCredentials(undefined);
-      }
-    } else if (stored) {
-      logger.info('Stored access token expired without a refresh token; removing it.');
+    if (stored) {
+      logger.info('Stored access token is near expiry; removing it before signing in again.');
       await this.replaceCredentials(undefined);
     }
 
@@ -248,38 +238,6 @@ export class OidcSessionManager {
     });
   }
 
-  private async refresh(stored: StoredCredentials, generation: number): Promise<StoredCredentials> {
-    let tokens: OidcTokens;
-    try {
-      tokens = await this.oidcClient.refresh(stored.refreshToken!);
-    } catch {
-      logger.error('SURFconext token refresh failed.');
-      throw new AuthenticationError('The saved SURFconext session could not be refreshed.');
-    }
-    this.ensureLoginActive(generation);
-
-    if (!tokens.accessToken) {
-      throw new AuthenticationError('SURFconext returned an invalid refreshed session.');
-    }
-
-    const refreshed: StoredCredentials = {
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken ?? stored.refreshToken,
-      idToken: tokens.idToken ?? stored.idToken,
-      expiresAt: this.expiryFrom(tokens),
-      account: tokens.subject
-        ? {
-          id: tokens.subject,
-          label: tokens.accountLabel
-            ?? (tokens.subject === stored.account.id ? stored.account.label : tokens.subject),
-        }
-        : stored.account,
-    };
-    const committed = await this.commitCredentials(refreshed, generation);
-    logger.info('Stored SURFconext session refreshed.');
-    return committed;
-  }
-
   private createCredentials(tokens: OidcTokens): StoredCredentials {
     if (!tokens.accessToken || !tokens.idToken || !tokens.subject) {
       throw new AuthenticationError('SURFconext returned an incomplete session. Please try again.');
@@ -287,7 +245,6 @@ export class OidcSessionManager {
 
     return {
       accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
       idToken: tokens.idToken,
       expiresAt: this.expiryFrom(tokens),
       account: {
@@ -362,6 +319,5 @@ function isStoredCredentials(value: unknown): value is StoredCredentials {
     && typeof candidate.expiresAt === 'number'
     && !!candidate.account
     && typeof candidate.account.id === 'string'
-    && typeof candidate.account.label === 'string'
-    && (candidate.refreshToken === undefined || typeof candidate.refreshToken === 'string');
+    && typeof candidate.account.label === 'string';
 }

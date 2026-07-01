@@ -14,7 +14,6 @@ export interface AuthorizationRequest {
 
 export interface OidcTokens {
   accessToken: string;
-  refreshToken?: string;
   idToken?: string;
   expiresIn?: number;
   subject?: string;
@@ -74,13 +73,6 @@ export class SurfConextOidcClient {
     return result;
   }
 
-  public async refresh(refreshToken: string): Promise<OidcTokens> {
-    logger.info('Requesting refreshed SURFconext tokens.');
-    const tokens = await oidc.refreshTokenGrant(await this.getConfiguration(), refreshToken);
-    logger.info('SURFconext tokens refreshed successfully.');
-    return this.toTokens(tokens);
-  }
-
   private getConfiguration(): Promise<Configuration> {
     if (!this.configurationPromise) {
       logger.info(`Discovering OIDC metadata from ${SURFCONEXT_AUTHORITY.origin}.`);
@@ -107,7 +99,6 @@ export class SurfConextOidcClient {
 
     return {
       accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
       idToken: tokens.id_token,
       expiresIn: tokens.expiresIn(),
       subject: claims?.sub,

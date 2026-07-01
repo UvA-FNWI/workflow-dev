@@ -22,7 +22,7 @@ export async function uploadWorkflowAuthenticated(
   logger.info(`Workflow API responded with HTTP ${response.status}.`);
 
   if (response.status === 401) {
-    logger.warn('Workflow API returned 401; refreshing authentication and retrying once.');
+    logger.warn('Workflow API returned 401; signing in again and retrying once.');
     await tokenProvider.invalidateAccessToken();
     accessToken = await tokenProvider.getAccessToken();
     response = await safelyUploadWorkflow(request, accessToken);
