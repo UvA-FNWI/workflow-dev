@@ -60,11 +60,20 @@ export class WorkflowDebugSession extends LoggingDebugSession {
         // Continue with other files even if one fails
       }
     }
+
+    const keyFile = await vscode.workspace.findFiles("**/.key");
+    if (keyFile.length === 0) {
+      this.sendErrorResponse(launchResponse, {
+        id: 404,
+        format: ".key file not found. Make sure that you have a valid API key and that it is stored in a .key file in your workspace"
+      });
+    }
     
     const response = await fetch(`${args.api}/Versions/${args.version}`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Api-Key': Buffer.from(await vscode.workspace.fs.readFile(keyFile[0])).toString('utf-8')
         },
         body: JSON.stringify(fileMap)
     });
@@ -76,7 +85,7 @@ export class WorkflowDebugSession extends LoggingDebugSession {
         });
     } else {
       this.sendResponse(launchResponse);
-      this.sendEvent(new OutputEvent(`Running. View the workflow at https://workflow-dummy-ui.datanose.nl/instances?version=${args.version}&api=${args.api}`));
+      this.sendEvent(new OutputEvent(`Running. View the workflow at https://milestones-tst.fnwi.uva.nl/?version=${args.version}&api=${args.api}`));
     }
   }
 }
