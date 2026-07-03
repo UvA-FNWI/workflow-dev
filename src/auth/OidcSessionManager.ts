@@ -1,9 +1,7 @@
 import {
   AuthorizationRequest,
   OidcTokens,
-  SURFCONEXT_CLIENT_ID,
-  SURFCONEXT_REDIRECT_URI,
-  SURFCONEXT_SCOPES,
+  SurfConextConfiguration,
   SurfConextOidcClient,
 } from './OidcClient.js';
 import { LoopbackCallbackServer } from './LoopbackCallbackServer.js';
@@ -64,14 +62,18 @@ export class OidcSessionManager {
   private loginPromise: Promise<WorkflowAuthenticationSession> | undefined;
   private pendingCallback: PendingCallback | undefined;
   private loginGeneration = 0;
-  private readonly oidcClient = new SurfConextOidcClient();
-  private readonly callbackServer = new LoopbackCallbackServer();
+  private readonly oidcClient: SurfConextOidcClient;
+  private readonly callbackServer: LoopbackCallbackServer;
 
   public constructor(
     private readonly secrets: SecretStore,
     private readonly openExternal: (url: URL) => Promise<boolean>,
+    private readonly configuration: SurfConextConfiguration,
     private readonly credentialsChanged: CredentialsChanged = () => undefined,
-  ) {}
+  ) {
+    this.oidcClient = new SurfConextOidcClient(configuration);
+    this.callbackServer = new LoopbackCallbackServer(configuration.redirectUri);
+  }
 
   public async getSession(interactive: boolean): Promise<WorkflowAuthenticationSession | undefined> {
     const stored = await this.loadCredentials();
@@ -163,7 +165,7 @@ export class OidcSessionManager {
       callbackServerHandle = await this.callbackServer.start(callbackUrl => this.handleCallback(callbackUrl));
     } catch {
       logger.error('Loopback callback listener failed to start.');
-      this.cancelLogin(`Could not listen for the SURFconext callback at ${SURFCONEXT_REDIRECT_URI}. Close any application using that port and try again.`);
+      this.cancelLogin(`Could not listen for the SURFconext callback at ${this.configuration.redirectUri}. Close any application using that port and try again.`);
     }
     if (callbackServerHandle) {
       try {
@@ -247,7 +249,7 @@ export class OidcSessionManager {
     }
 
     return {
-      clientId: SURFCONEXT_CLIENT_ID,
+      clientId: this.configuration.clientId,
       accessToken: tokens.accessToken,
       idToken: tokens.idToken,
       expiresAt: this.expiryFrom(tokens),
@@ -277,7 +279,7 @@ export class OidcSessionManager {
 
     try {
       const parsed: unknown = JSON.parse(serialized);
-      if (isStoredCredentials(parsed)) {
+      if (isStoredCredentials(parsed, this.configuration.clientId)) {
         this.credentials = parsed;
         logger.info('Restored SURFconext credentials from secure storage.');
         return parsed;
@@ -308,17 +310,17 @@ export class OidcSessionManager {
       id: credentials.account.id,
       accessToken: credentials.accessToken,
       account: credentials.account,
-      scopes: [...SURFCONEXT_SCOPES],
+      scopes: [...this.configuration.scopes],
     };
   }
 }
 
-function isStoredCredentials(value: unknown): value is StoredCredentials {
+function isStoredCredentials(value: unknown, clientId: string): value is StoredCredentials {
   if (!value || typeof value !== 'object') {
     return false;
   }
   const candidate = value as Partial<StoredCredentials>;
-  return candidate.clientId === SURFCONEXT_CLIENT_ID
+  return candidate.clientId === clientId
     && typeof candidate.accessToken === 'string'
     && typeof candidate.idToken === 'string'
     && typeof candidate.expiresAt === 'number'

@@ -6,6 +6,7 @@ import {
   StoredCredentials,
   WorkflowAuthenticationSession,
 } from './OidcSessionManager.js';
+import { SurfConextConfiguration } from './OidcClient.js';
 
 export const AUTHENTICATION_PROVIDER_ID = 'workflow.surfconext';
 export const AUTHENTICATION_PROVIDER_LABEL = 'SURFconext';
@@ -17,9 +18,17 @@ export class WorkflowAuthenticationProvider implements vscode.AuthenticationProv
   public readonly onDidChangeSessions = this.sessionChangeEmitter.event;
 
   public constructor(secrets: vscode.SecretStorage) {
+    const settings = vscode.workspace.getConfiguration('workflow.surfconext');
+    const configuration: SurfConextConfiguration = {
+      authority: new URL(settings.get<string>('authority')!),
+      clientId: settings.get<string>('clientId')!,
+      redirectUri: settings.get<string>('redirectUri')!,
+      scopes: settings.get<string[]>('scopes')!,
+    };
     this.sessionManager = new OidcSessionManager(
       secrets,
       url => Promise.resolve(vscode.env.openExternal(vscode.Uri.parse(url.toString()))),
+      configuration,
       (previous, current) => this.emitCredentialsChanged(previous, current),
     );
   }

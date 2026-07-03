@@ -51,6 +51,7 @@ The extension temporarily listens on port 53682, opens SURFconext in the system 
 Access and ID tokens are stored in VS Code SecretStorage. An access token is reused until it is close to expiry, then the extension starts browser sign-in again. Workflow API requests include the access token as a bearer token.
 
 Port 53682 must be available, and the callback URL must be registered for the client.
+These values can be overridden under the `workflow.surfconext` extension settings.
 
 ## Sign out
 

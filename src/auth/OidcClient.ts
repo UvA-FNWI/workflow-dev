@@ -1,10 +1,12 @@
 import * as oidc from 'openid-client';
 import { logger } from '../logger.js';
 
-export const SURFCONEXT_AUTHORITY = new URL('https://connect.test.surfconext.nl/');
-export const SURFCONEXT_CLIENT_ID = 'milestones-tst.fnwi.uva.nl';
-export const SURFCONEXT_SCOPES = ['openid', 'profile'] as const;
-export const SURFCONEXT_REDIRECT_URI = 'http://127.0.0.1:53682/callback';
+export interface SurfConextConfiguration {
+  authority: URL;
+  clientId: string;
+  redirectUri: string;
+  scopes: readonly string[];
+}
 
 export interface AuthorizationRequest {
   url: URL;
@@ -25,6 +27,8 @@ type Configuration = oidc.Configuration;
 export class SurfConextOidcClient {
   private configurationPromise: Promise<Configuration> | undefined;
 
+  public constructor(private readonly settings: SurfConextConfiguration) {}
+
   public async createAuthorizationRequest(): Promise<AuthorizationRequest> {
     logger.info('Preparing SURFconext authorization request.');
     const configuration = await this.getConfiguration();
@@ -32,10 +36,10 @@ export class SurfConextOidcClient {
     const codeVerifier = oidc.randomPKCECodeVerifier();
     const codeChallenge = await oidc.calculatePKCECodeChallenge(codeVerifier);
     const url = oidc.buildAuthorizationUrl(configuration, {
-      client_id: SURFCONEXT_CLIENT_ID,
-      redirect_uri: SURFCONEXT_REDIRECT_URI,
+      client_id: this.settings.clientId,
+      redirect_uri: this.settings.redirectUri,
       response_type: 'code',
-      scope: SURFCONEXT_SCOPES.join(' '),
+      scope: this.settings.scopes.join(' '),
       state,
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
@@ -75,10 +79,10 @@ export class SurfConextOidcClient {
 
   private getConfiguration(): Promise<Configuration> {
     if (!this.configurationPromise) {
-      logger.info(`Discovering OIDC metadata from ${SURFCONEXT_AUTHORITY.origin}.`);
+      logger.info(`Discovering OIDC metadata from ${this.settings.authority.origin}.`);
       this.configurationPromise = oidc.discovery(
-        SURFCONEXT_AUTHORITY,
-        SURFCONEXT_CLIENT_ID,
+        this.settings.authority,
+        this.settings.clientId,
         undefined,
         oidc.None(),
       ).catch(error => {

@@ -51,10 +51,11 @@ export class WorkflowDebugSession extends LoggingDebugSession {
       );
 
       if (!response.ok) {
+          const details = (await response.text()).trim();
           logger.warn(`Workflow launch stopped because the API returned HTTP ${response.status}.`);
           this.sendErrorResponse(launchResponse, {
             id: response.status,
-            format: `Workflow API rejected the upload (${response.status}).`
+            format: `Workflow API rejected the upload (${response.status})${details ? `: ${details}` : '.'}`
           });
           return;
       }

@@ -1,10 +1,13 @@
 import { createServer, Server } from 'node:http';
-import { SURFCONEXT_REDIRECT_URI } from './OidcClient.js';
 import { logger } from '../logger.js';
 
 export class LoopbackCallbackServer {
   private server: Server | undefined;
-  private readonly redirectUri = new URL(SURFCONEXT_REDIRECT_URI);
+  private readonly redirectUri: URL;
+
+  public constructor(redirectUri: string) {
+    this.redirectUri = new URL(redirectUri);
+  }
 
   public start(onCallback: (callbackUrl: URL) => void): Promise<{ dispose(): void }> {
     if (this.server) {
@@ -48,7 +51,7 @@ export class LoopbackCallbackServer {
         server.off('error', fail);
         server.on('error', () => undefined);
         this.server = server;
-        logger.info(`Listening for the SURFconext callback at ${SURFCONEXT_REDIRECT_URI}.`);
+        logger.info(`Listening for the SURFconext callback at ${this.redirectUri.toString()}.`);
         resolve({
           dispose: () => {
             if (this.server === server) {

@@ -29,6 +29,37 @@
         "label": "SURFconext"
       }
     ],
+    "configuration": {
+      "title": "Workflow authentication",
+      "properties": {
+        "workflow.surfconext.authority": {
+          "type": "string",
+          "default": "https://connect.test.surfconext.nl/",
+          "description": "SURFconext OIDC issuer URL. Reload the window after changing this setting."
+        },
+        "workflow.surfconext.clientId": {
+          "type": "string",
+          "default": "milestones-tst.fnwi.uva.nl",
+          "description": "SURFconext OIDC client ID. Reload the window after changing this setting."
+        },
+        "workflow.surfconext.redirectUri": {
+          "type": "string",
+          "default": "http://127.0.0.1:53682/callback",
+          "description": "Registered loopback callback URL. Reload the window after changing this setting."
+        },
+        "workflow.surfconext.scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "openid",
+            "profile"
+          ],
+          "description": "OIDC scopes requested during sign-in. Reload the window after changing this setting."
+        }
+      }
+    },
     "debuggers": [
       {
         "type": "workflow",
