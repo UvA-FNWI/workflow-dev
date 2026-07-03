@@ -1,6 +1,8 @@
 import {
   AuthorizationRequest,
   OidcTokens,
+  SURFCONEXT_CLIENT_ID,
+  SURFCONEXT_REDIRECT_URI,
   SURFCONEXT_SCOPES,
   SurfConextOidcClient,
 } from './OidcClient.js';
@@ -23,6 +25,7 @@ export interface AccountDetails {
 }
 
 export interface StoredCredentials {
+  clientId: string;
   accessToken: string;
   idToken: string;
   expiresAt: number;
@@ -160,7 +163,7 @@ export class OidcSessionManager {
       callbackServerHandle = await this.callbackServer.start(callbackUrl => this.handleCallback(callbackUrl));
     } catch {
       logger.error('Loopback callback listener failed to start.');
-      this.cancelLogin('Could not listen for the SURFconext callback on localhost port 3000. Close any application using that port and try again.');
+      this.cancelLogin(`Could not listen for the SURFconext callback at ${SURFCONEXT_REDIRECT_URI}. Close any application using that port and try again.`);
     }
     if (callbackServerHandle) {
       try {
@@ -244,6 +247,7 @@ export class OidcSessionManager {
     }
 
     return {
+      clientId: SURFCONEXT_CLIENT_ID,
       accessToken: tokens.accessToken,
       idToken: tokens.idToken,
       expiresAt: this.expiryFrom(tokens),
@@ -314,7 +318,8 @@ function isStoredCredentials(value: unknown): value is StoredCredentials {
     return false;
   }
   const candidate = value as Partial<StoredCredentials>;
-  return typeof candidate.accessToken === 'string'
+  return candidate.clientId === SURFCONEXT_CLIENT_ID
+    && typeof candidate.accessToken === 'string'
     && typeof candidate.idToken === 'string'
     && typeof candidate.expiresAt === 'number'
     && !!candidate.account

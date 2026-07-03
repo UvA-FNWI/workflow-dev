@@ -42,15 +42,15 @@ VS Code extension for uploading and running workflows from a local workspace.
 The first workflow launch signs in through SURFconext using the authorization-code flow with PKCE.
 
 - OIDC issuer: `https://connect.test.surfconext.nl/`
-- Client ID: `datanose.local`
-- Callback: `http://localhost:3000/callback`
+- Client ID: `milestones-tst.fnwi.uva.nl`
+- Callback: `http://127.0.0.1:53682/callback`
 - Scopes: `openid profile`
 
-The extension temporarily listens on port 3000, opens SURFconext in the system browser, validates the callback, and exchanges the authorization code. It then requests UserInfo for the account display name.
+The extension temporarily listens on port 53682, opens SURFconext in the system browser, validates the callback, and exchanges the authorization code. It then requests UserInfo for the account display name.
 
 Access and ID tokens are stored in VS Code SecretStorage. An access token is reused until it is close to expiry, then the extension starts browser sign-in again. Workflow API requests include the access token as a bearer token.
 
-Port 3000 must be available, and the callback URL must be registered for the client.
+Port 53682 must be available, and the callback URL must be registered for the client.
 
 ## Sign out
 

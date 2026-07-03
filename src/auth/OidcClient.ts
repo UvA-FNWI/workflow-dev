@@ -2,9 +2,9 @@ import * as oidc from 'openid-client';
 import { logger } from '../logger.js';
 
 export const SURFCONEXT_AUTHORITY = new URL('https://connect.test.surfconext.nl/');
-export const SURFCONEXT_CLIENT_ID = 'datanose.local';
+export const SURFCONEXT_CLIENT_ID = 'milestones-tst.fnwi.uva.nl';
 export const SURFCONEXT_SCOPES = ['openid', 'profile'] as const;
-export const SURFCONEXT_REDIRECT_URI = 'http://localhost:3000/callback';
+export const SURFCONEXT_REDIRECT_URI = 'http://127.0.0.1:53682/callback';
 
 export interface AuthorizationRequest {
   url: URL;
