@@ -2,7 +2,7 @@
   "name": "workflow-dev",
   "displayName": "workflow-dev",
   "description": "",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "publisher": "uva",
   "type": "module",
   "repository": {
