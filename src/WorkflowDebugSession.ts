@@ -76,8 +76,8 @@ export class WorkflowDebugSession extends LoggingDebugSession {
     const fileMap: Record<string, string> = {};
 
     // Find all files in the workspace
-    const files = await vscode.workspace.findFiles("**/*.yaml");
-    logger.info(`Found ${files.length} YAML file(s) in the workspace.`);
+    const files = await vscode.workspace.findFiles("{**/*.yaml,Layouts/default.html}");
+    logger.info(`Found ${files.length} workflow configuration file(s) in the workspace.`);
 
     // Read each file
     for (const fileUri of files) {

@@ -15,7 +15,7 @@ VS Code extension for uploading and running workflows from a local workspace.
 
 2. Open this repository in VS Code.
 3. Open **Run and Debug** and start the **Extension** launch configuration (or press F5). A second VS Code window opens—the **Extension Development Host**, which has this extension loaded.
-4. In that window, open a workflow project folder. The repo includes `test-workspace/` as a minimal example.
+4. In that window, open the workflow configuration root (the folder containing `Common/` and `Layouts/default.html`; workflow definitions can sit anywhere below it).
 5. Add a `.vscode/launch.json` in that folder with a `workflow` debug configuration. Two fields are required:
    - `api` — base URL of the Workflow API (e.g. `https://milestones-tst.fnwi.uva.nl/`)
    - `version` — version name used when uploading and running the workflow (e.g. `testing-1`)
