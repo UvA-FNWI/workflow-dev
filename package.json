@@ -2,7 +2,7 @@
   "name": "workflow-dev",
   "displayName": "workflow-dev",
   "description": "",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "uva",
   "type": "module",
   "repository": {
@@ -88,11 +88,11 @@
         },
         "initialConfigurations": [
           {
-              "type": "workflow",
-              "request": "launch",
-              "name": "Launch workflow",
-              "api": "https://milestones-tst.fnwi.uva.nl/",
-              "version": "testing-1"
+            "type": "workflow",
+            "request": "launch",
+            "name": "Launch workflow",
+            "api": "https://api.milestones-tst.fnwi.uva.nl/",
+            "version": "testing-1"
           }
         ],
         "configurationSnippets": [
@@ -103,7 +103,7 @@
               "type": "workflow",
               "request": "launch",
               "name": "Launch workflow",
-              "api": "https://milestones-tst.fnwi.uva.nl/",
+              "api": "https://api.milestones-tst.fnwi.uva.nl/",
               "version": "testing-1"
             }
           }
