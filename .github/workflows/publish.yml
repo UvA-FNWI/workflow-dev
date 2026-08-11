@@ -2,7 +2,9 @@ name: Publish
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feature/DN-3920
 
 concurrency:
   group: publish
