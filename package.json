@@ -1,9 +1,20 @@
 {
   "name": "workflow-dev",
-  "displayName": "workflow-dev",
-  "description": "",
+  "displayName": "Workflow Dev",
+  "description": "Upload and run University of Amsterdam workflows from VS Code.",
   "version": "0.1.5",
-  "publisher": "uva",
+  "publisher": "amsuni",
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/UvA-FNWI/workflow-dev#readme",
+  "bugs": {
+    "url": "https://github.com/UvA-FNWI/workflow-dev/issues"
+  },
+  "keywords": [
+    "workflow",
+    "debugger",
+    "yaml",
+    "surfconext"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
@@ -150,7 +161,8 @@
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "3.9.2",
     "eslint": "^9.36.0",
     "typescript": "^5.9.3"
   },

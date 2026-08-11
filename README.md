@@ -2,25 +2,20 @@
 
 VS Code extension for uploading and running workflows from a local workspace.
 
-## Development
+## Installation
 
-1. Install dependencies and compile:
+Install **Workflow Dev** from the VS Code Marketplace, or run:
 
-   ```sh
-   npm ci
-   npm run compile
-   ```
+```sh
+code --install-extension amsuni.workflow-dev
+```
 
-   Use `npm run watch` instead of `compile` if you want TypeScript to rebuild on save.
+The extension also installs the Red Hat YAML extension used for workflow schemas.
 
-2. Open this repository in VS Code.
-3. Open **Run and Debug** and start the **Extension** launch configuration (or press F5). A second VS Code window opens—the **Extension Development Host**, which has this extension loaded.
-4. In that window, open the workflow configuration root (the folder containing `Common/` and `Layouts/default.html`; workflow definitions can sit anywhere below it).
-5. Add a `.vscode/launch.json` in that folder with a `workflow` debug configuration. Two fields are required:
-   - `api` — base URL of the Workflow API (e.g. `https://api.milestones-tst.fnwi.uva.nl/`)
-   - `version` — version name used when uploading and running the workflow (e.g. `testing-1`)
+## Run a workflow
 
-   Then start it from **Run and Debug**. Example configuration:
+1. Open the workflow configuration root in VS Code. This is the folder containing `Common/` and `Layouts/default.html`; workflow definitions can sit anywhere below it.
+2. Add a `.vscode/launch.json` with a `workflow` debug configuration. The `api` and `version` fields are required:
 
    ```json
    {
@@ -37,6 +32,8 @@ VS Code extension for uploading and running workflows from a local workspace.
    }
    ```
 
+3. Open **Run and Debug** and start **Launch workflow**. On the first launch, complete the SURFconext sign-in in your browser. The extension then uploads the workspace YAML files and `Layouts/default.html`, and prints the launched workflow URL in the debug console.
+
 ## Authentication
 
 The first workflow launch signs in through SURFconext using the authorization-code flow with PKCE.
@@ -50,13 +47,43 @@ The extension temporarily listens on port 53682, opens SURFconext in the system 
 
 Access and ID tokens are stored in VS Code SecretStorage. An access token is reused until it is close to expiry, then the extension starts browser sign-in again. Workflow API requests include the access token as a bearer token.
 
-Port 53682 must be available, and the callback URL must be registered for the client.
-These values can be overridden under the `workflow.surfconext` extension settings.
+Port 53682 must be available, and the callback URL must be registered for the client. These values can be overridden under the `workflow.surfconext` extension settings; reload VS Code after changing them.
 
-## Sign out
+To sign out, open the **Accounts/Profile** menu in the bottom-left of VS Code, select the account marked **SURFconext**, and choose **Sign Out**. This removes locally stored tokens but does not end the browser's SURFconext SSO session.
 
-Open the **Accounts/Profile** menu in the bottom-left of VS Code, select the account marked **SURFconext**, and choose **Sign Out**.
+## Development
 
-This removes the locally stored tokens. It does not end the browser's SURFconext SSO session.
+1. Install dependencies and compile:
+
+   ```sh
+   npm ci
+   npm run compile
+   ```
+
+   Use `npm run watch` instead of `compile` if you want TypeScript to rebuild on save.
+
+2. Open this repository in VS Code.
+3. Open **Run and Debug** and start the **Extension** launch configuration (or press F5). A second VS Code window opens—the **Extension Development Host**, which has this extension loaded.
+4. In that window, follow the **Run a workflow** steps above.
 
 During extension development, logs are written to the parent VS Code window's **Debug Console** with the `[workflow-dev]` prefix.
+
+## Releases
+
+Until `DN-3950` is completed, releases are published manually.
+
+1. Update the version in `package.json` and `package-lock.json`:
+
+   ```sh
+   npm version <major.minor.patch> --no-git-tag-version
+   ```
+
+2. Install dependencies, test, and package the extension:
+
+   ```sh
+   npm ci
+   npm test
+   npx --no-install vsce package --out workflow-dev.vsix
+   ```
+
+3. Upload `workflow-dev.vsix` through the [`amsuni` Marketplace publisher page](https://marketplace.visualstudio.com/manage/publishers/amsuni).
