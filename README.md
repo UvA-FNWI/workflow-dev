@@ -67,3 +67,23 @@ To sign out, open the **Accounts/Profile** menu in the bottom-left of VS Code, s
 4. In that window, follow the **Run a workflow** steps above.
 
 During extension development, logs are written to the parent VS Code window's **Debug Console** with the `[workflow-dev]` prefix.
+
+## Releases
+
+Until `DN-3950` is completed, releases are published manually.
+
+1. Update the version in `package.json` and `package-lock.json`:
+
+   ```sh
+   npm version <major.minor.patch> --no-git-tag-version
+   ```
+
+2. Install dependencies, test, and package the extension:
+
+   ```sh
+   npm ci
+   npm test
+   npx --no-install vsce package --out workflow-dev.vsix
+   ```
+
+3. Upload `workflow-dev.vsix` through the [`amsuni` Marketplace publisher page](https://marketplace.visualstudio.com/manage/publishers/amsuni).
